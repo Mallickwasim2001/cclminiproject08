@@ -1,0 +1,90 @@
+before hosting process we have create instance in AWS EC2
+then start hosting process putty software
+
+
+
+Installing Counter Strike 1.6 Services on Linux
+
+(1)Create a directory, go to it and download the archive with installation files from the official website:
+
+mkdir ~/SteamCMD
+cd ~/SteamCMD
+wget http://media.steampowered.com/client/...
+
+(2)Unpack the downloaded archive, delete it and make the installation script executable:
+
+tar xfz steamcmd_linux.tar.gz
+rm steamcmd_linux.tar.gz
+chmod +x steamcmd.sh
+
+(3)Install the necessary libraries so that you can run 32-bit applications:
+
+sudo dpkg --add-architecture i386
+sudo apt-get update
+sudo apt-get install lib32gcc1
+
+(4)Command to Update SDK Library in Linux (Unbuntu)
+
+sudo apt install libsdl2-2.0-0:i386
+
+
+(5)Run the installation script:
+
+./steamcmd.sh
+
+(6)Log in anonymously on the official server:
+
+login anonymous
+
+(7)You may have to log in using your Steam account username and password:
+
+login USERNAME
+After entering the command, you must enter the password, wait, and you may also need to enter the Steam Guard code that will come by email.
+
+(8)Specify the directory for the downloaded files:
+
+force_install_dir ../hlds
+
+(9)We execute the command to start downloading files (two times, since the first time the process is interrupted):
+
+app_update 90 validate
+app_update 90 -beta beta validate
+
+At the end we will see the message:
+
+Success! App ’90’ fully installed.
+
+(10)Exit the command line installation script:
+
+quit
+
+(11)Create the necessary directories and files:
+
+mkdir ~/.steam
+ln -s ~/SteamCMD/linux32 ~/.steam/sdk32
+touch ~/hlds/cstrike/listip.cfg
+touch ~/hlds/cstrike/banned.cfg
+
+(12)Go to the directory with the downloaded files and try to run the Counter-Strike 1.6 server for the test:
+
+cd ~/hlds
+./hlds_run -console -game cstrike +port 27015 +map de_dust2 +maxplayers 16 -pingboost 1
+
+(13)If everything is ok, interrupt the server by typing quit or pressing CTRL+C.
+
+(14)Install Screen so that you can start the server in the background and exit Linux:
+
+sudo apt-get install sudo screen
+
+(15)Run a new Screen session and start the server (where 192.168.1.50 is your dedicated IP that is visible from the Internet):
+
+screen -a
+cd ~/hlds
+./hlds_run -console -game cstrike +port 27015 +map de_dust2 +maxplayers 16 -pingboost 1
+
+(16)Press Ctrl+a and immediately z to disconnect from the session and leave it running as a background process.
+
+(17)In the future, to return, let’s see the list of running sessions and connect to the desired one:
+
+screen -ls
+screen -r NAME
